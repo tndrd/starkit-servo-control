@@ -1,0 +1,3 @@
+[submodule "Deps/starkit-cs-message"]
+	path = Deps/starkit-cs-message
+	url = https://github.com/tndrd/starkit-cs-message.git
