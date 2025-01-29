@@ -1,14 +1,16 @@
 // CsMessage.h adapter
 // The purpose of this file is namespace cleanup.
 // Undeffing unused macro constants, transferring the required
-// ones into enum classes
+// ones into corresponding namespaces
 
 #pragma once
 #include "CsMessage/CsMessage.h"
-#include <iostream>
+#include <cstddef>
 
 namespace StarkitServo {
 struct Limits {
+  static constexpr size_t MaxMsgSize = 256;
+
   static constexpr int ServoIdMin = 0;
   static constexpr int ServoIdMax = 15;
 
@@ -32,69 +34,6 @@ struct Cmds {
   static constexpr uint8_t Write = CS_CMD_MSG_WRITE;
   static constexpr uint8_t Read = CS_CMD_MSG_READ;
 };
-
-namespace Testing {
-const char *Cmd2Str(int cmd) {
-  switch (cmd) {
-#define CASE(cmdname)                                                          \
-  case cmdname:                                                                \
-    return #cmdname
-    CASE(CS_CMD_MSG_CONTROL);
-    CASE(CS_CMD_MSG_CONTROL_EX);
-    CASE(CS_CMD_MSG_INFO);
-    CASE(CS_CMD_MSG_READ);
-    CASE(CS_CMD_MSG_WRITE);
-    CASE(CS_CMD_MSG_FLASH);
-
-  default:
-    return "UNKNOWN_CMD";
-  }
-#undef CASE
-}
-
-void DumpControlMsg(CsMessageIn msg) {
-  int16_t value = msg.getInt16();
-  std::cout << "Value: " << std::hex << value << std::dec << std::endl;
-}
-
-void DumpWriteMsg(CsMessageIn msg) {
-  int index = msg.getUInt16();
-  std::cout << "Index: " << index << std::endl;
-  std::cout << "Value: " << msg.getInt32() << std::endl;
-}
-
-void DumpReadMsg(CsMessageIn msg) {
-  int index = msg.getUInt16();
-  std::cout << "Index: " << index << std::endl;
-}
-
-// Need to make a copy here
-void DumpMsg(CsMessageIn msg) {
-  std::cout << "id:  " << msg.id() << std::endl;
-
-  int cmd = msg.cmd();
-
-  std::cout << "cmd: " << Cmd2Str(cmd) << std::endl;
-
-  switch (cmd) {
-  case CS_CMD_MSG_CONTROL:
-    DumpControlMsg(msg);
-    break;
-  case CS_CMD_MSG_INFO:
-    break;
-  case CS_CMD_MSG_READ:
-    DumpReadMsg(msg);
-    break;
-  case CS_CMD_MSG_WRITE:
-    DumpWriteMsg(msg);
-    break;
-
-  default:
-    std::cout << "Unexpected message" << std::endl;
-  }
-};
-
-} // namespace Testing
 
 } // namespace StarkitServo
 

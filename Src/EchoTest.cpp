@@ -1,15 +1,13 @@
-#include "Protocol.hpp"
-#include "EchoIOMock.hpp"
-#include <random>
-#include <limits>
+#include "SKSBase/EchoIOMock.hpp"
+#include "SKSBase/SKSBase.hpp"
 #include <cassert>
 
 using namespace StarkitServo;
 
 static uint8_t ID = 0xC; // 12
-using P = Protocol::Procedures;
+using P = SKSBase::Procedures;
 
-void TestControl(Testing::EchoIOMock& io, Protocol& servo) {
+void TestControl(Testing::EchoIOMock& io, SKSBase& servo) {
     int16_t val = 0x10ad;
     auto resp = servo.Call<P::Control>(io, {ID, val});
 
@@ -17,7 +15,7 @@ void TestControl(Testing::EchoIOMock& io, Protocol& servo) {
     assert(resp.Value == val);
 }
 
-void TestInfo(Testing::EchoIOMock& io, Protocol& servo) {
+void TestInfo(Testing::EchoIOMock& io, SKSBase& servo) {
     auto resp = servo.Call<P::Info>(io, {ID});
 
     assert(resp.Param1 == ID);
@@ -25,7 +23,7 @@ void TestInfo(Testing::EchoIOMock& io, Protocol& servo) {
     assert(resp.Param3 == ID);
 }
 
-void TestRead(Testing::EchoIOMock& io, Protocol& servo) {
+void TestRead(Testing::EchoIOMock& io, SKSBase& servo) {
     int16_t ind = 0x1abc;
 
     auto resp = servo.Call<P::Read>(io, {ID, ind});
@@ -33,7 +31,7 @@ void TestRead(Testing::EchoIOMock& io, Protocol& servo) {
     assert(resp.Value = ind);
 }
 
-void TestWrite(Testing::EchoIOMock& io, Protocol& servo) {
+void TestWrite(Testing::EchoIOMock& io, SKSBase& servo) {
     int32_t val = 0x1cbd;
     int16_t ind = 0x1aaa;
 
@@ -44,7 +42,7 @@ void TestWrite(Testing::EchoIOMock& io, Protocol& servo) {
 
 int main() {
     auto io = Testing::EchoIOMock(true);
-    auto servo = Protocol{};
+    auto servo = SKSBase{};
     
     TestControl(io, servo);
     TestInfo(io, servo);
