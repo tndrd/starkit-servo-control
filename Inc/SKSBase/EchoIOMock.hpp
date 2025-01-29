@@ -10,15 +10,10 @@
 namespace StarkitServo::Testing {
 struct EchoIOMock {
 private:
-  int CmdId = 0;
   bool Verbose;
-
-  CsMessageOut MsgOut;
 
 public:
   EchoIOMock(bool verbose = false);
-
-  void Write(const uint8_t *buf, uint8_t size);
-  void Read(uint8_t *buf, uint8_t size);
+  void Synchronize(const uint8_t *reqBuf, uint8_t reqSz, uint8_t *rspBuf, uint8_t rspSz);
 };
 } // namespace StarkitServo::Testing

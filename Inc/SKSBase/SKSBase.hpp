@@ -100,18 +100,17 @@ public:
 
   // Requires two template parameters:
   // Proc: Procedures::X class
-  // IO - generic class that supports signatures
-  //  "void IO::Write(const uint8_t* src, size_t sz)"
-  //  "void IO::Read(uint8_t* dst, size_t sz)"
+  // IO - generic class that supports function
+  //  "void IO::Synchronize(const uint8_t* reqBuf, uint8_t reqSz, uint8_t* rspBuf, uint8_t rspSz)"
   template <typename Proc, typename IO>
   typename Proc::Responce Call(IO &io, const typename Proc::Request &request) {
     TxMessage = {};
 
     auto bufrs = Proc::Serialize(*this, request);
-    io.Write(bufrs.TxBuf, bufrs.TxSize);
-
     uint8_t rxSize = RxSizes::Header + bufrs.RxSize + RxSizes::Tail;
-    io.Read(bufrs.RxBuf, rxSize);
+
+    io.Synchronize(bufrs.TxBuf, bufrs.TxSize, bufrs.RxBuf, rxSize);
+
     auto frame = Unpack(rxSize);
 
     if (!frame.Ok)
