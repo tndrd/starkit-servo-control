@@ -87,17 +87,18 @@ auto SKSBase::Unpack(uint8_t rxSize) const -> RxFrame {
 
   auto msg = CsMessageIn{buf, 0, rxSize, 0};
 
-  /*
-  std::cout << "Buffer of size " << +rxSize << std::endl;
-  for (int i = 0; i < 16; ++i)
-    std::cout << std::hex << +RxBuffer[i] << " ";
-  */
-
   uint8_t crc1 = CsMessageOut::crc(buf, rxSize - 1) | 0x80; // Im out rn
   uint8_t crc2 = RxBuffer[rxSize - 1];
 
-  // std::cout << std::endl << "real: " << +crc1 << " vs " << +crc2 <<
-  // std::endl; std::cout << std::dec;
+  /*
+  std::cerr << "Buffer of size " << +rxSize << std::endl;
+  for (int i = 0; i < rxSize; ++i)
+    std::cerr << std::hex << +RxBuffer[i] << " ";
+  std::cerr << std::endl;
+
+  std::cerr << std::endl << "real: " << +crc1 << " vs " << +crc2 <<
+  std::endl; std::cerr << std::dec;
+  */
 
   return {msg, crc1 == crc2};
 }
