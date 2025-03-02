@@ -25,7 +25,7 @@ struct RxSizes {
   static constexpr uint8_t Control = 2 + 2;
   static constexpr uint8_t Info = 3 * 2;
   static constexpr uint8_t Write = 4;
-  static constexpr uint8_t Read = 4;
+  static constexpr uint8_t Read = 4 + 1;
 };
 
 struct Cmds {
