@@ -3,6 +3,7 @@
 #include <array>
 #include <functional>
 #include <stdexcept>
+#include <iostream>
 
 namespace StarkitServo {
 
@@ -107,8 +108,14 @@ public:
     TxMessage = {};
 
     auto bufrs = Proc::Serialize(*this, request);
-    uint8_t rxSize = RxSizes::Header + bufrs.RxSize + RxSizes::Tail;
-
+    uint8_t rxSize = bufrs.RxSize + RxSizes::Tail;
+    /*
+    std::cerr << "Buffer of size " << +bufrs.TxSize << ": " << std::hex << std::endl;
+    for (int i = 0; i < bufrs.TxSize; ++i) {
+      std::cerr << +bufrs.TxBuf[i] << " ";
+    }
+    std::cerr << std::dec << std::endl;
+    */
     io.Synchronize(bufrs.TxBuf, bufrs.TxSize, bufrs.RxBuf, rxSize);
 
     auto frame = Unpack(rxSize);
